@@ -102,7 +102,6 @@ const LoginForm = () => {
             
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
             <Button
               type="submit"
               className="w-full"
@@ -113,7 +112,6 @@ const LoginForm = () => {
               ) : (
                 "Criar conta"
               )}
-            </Button>
             </Button>
           </CardFooter>
         </form>
