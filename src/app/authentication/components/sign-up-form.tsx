@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const registerSchema = z.object({
   name: z
@@ -56,16 +57,17 @@ const SignUpForm = () => {
   });
 
   async function onSubmitRegister(values: z.infer<typeof registerSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    if(values.confirmPassword !== values.password){
+      toast.error("As senhas não coincidem. Por favor, verifique e tente novamente.")
+      return
+    }
 
     try {
       await authClient.signUp.email({
-        email: values.email, // user email address
-        password: values.password, // user password -> min 8 characters by default
-        name: values.name, // user display name
-        callbackURL: "/dashboard", // A URL to redirect to after the user verifies their email (optional)
+        email: values.email,
+        password: values.password, 
+        name: values.name,
+        callbackURL: "/dashboard", 
       });
     } catch {}
   }

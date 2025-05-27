@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -21,6 +22,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z
@@ -34,6 +38,7 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const router = useRouter()
   const formlogin = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -42,10 +47,18 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmitlogin(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmitlogin(values: z.infer<typeof loginSchema>) {
+    await authClient.signIn.email({
+      email: values.email,
+      password: values.password
+    }, {
+      onSuccess: () => {
+        router.push("/dashboard")
+      },
+      onError: () => {
+        toast.error("E-mail ou senha inválidos. Tente novamente.")
+      }
+    })
   }
 
   return (
@@ -90,7 +103,17 @@ const LoginForm = () => {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">
-              Entrar
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={formlogin.formState.isSubmitting}
+            >
+              {formlogin.formState.isSubmitting ? (
+                <Loader2 className="rm-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Criar conta"
+              )}
+            </Button>
             </Button>
           </CardFooter>
         </form>
