@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 const registerSchema = z.object({
   name: z
@@ -53,10 +55,19 @@ const SignUpForm = () => {
     },
   });
 
-  function onSubmitRegister(values: z.infer<typeof registerSchema>) {
+  async function onSubmitRegister(values: z.infer<typeof registerSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    try {
+      await authClient.signUp.email({
+        email: values.email, // user email address
+        password: values.password, // user password -> min 8 characters by default
+        name: values.name, // user display name
+        callbackURL: "/dashboard", // A URL to redirect to after the user verifies their email (optional)
+      });
+    } catch {}
   }
 
   return (
@@ -125,8 +136,16 @@ const SignUpForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Criar Conta
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={formRegister.formState.isSubmitting}
+            >
+              {formRegister.formState.isSubmitting ? (
+                <Loader2 className="rm-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Criar conta"
+              )}
             </Button>
           </CardFooter>
         </form>

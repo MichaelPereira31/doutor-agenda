@@ -1,11 +1,13 @@
-import { db } from "@/db/index.js";
+import { db } from "@/db";
+import * as schema from "@/db/schema"
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg", 
-    usePlural: true
+    usePlural: true,
+    schema
   }),
   user: {
     modelName: "usersTable"
@@ -18,6 +20,8 @@ export const auth = betterAuth({
   },
   account: {
     modelName: "accountTable"
+  },
+  emailAndPassword:{
+    enabled: true
   }
-  //... the rest of your config
 });
