@@ -22,12 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const registerSchema = z.object({
-  name: z
-    .string({ required_error: "Necessário informar o nome." })
-    .trim()
-    .min(2, "Necessário informar o nome.")
-    .max(50),
+const loginSchema = z.object({
   email: z
     .string({ required_error: "Necessário informar o e-mail." })
     .trim()
@@ -36,24 +31,18 @@ const registerSchema = z.object({
     .string({ required_error: "Necessário informar a senha." })
     .trim()
     .min(8, "A senha deve ter pelo menos 8 caracteres."),
-  confirmPassword: z
-    .string({ required_error: "Necessário confirmar a senha." })
-    .trim()
-    .min(8, "A confirmação de senha deve ter pelo menos 8 caracteres."),
 });
 
-const SignUpForm = () => {
-  const formRegister = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+const LoginForm = () => {
+  const formlogin = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      name: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  function onSubmitRegister(values: z.infer<typeof registerSchema>) {
+  function onSubmitlogin(values: z.infer<typeof loginSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -62,30 +51,17 @@ const SignUpForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Criar Conta</CardTitle>
-        <CardDescription>Crie uma conta para continuar.</CardDescription>
+        <CardTitle>Login</CardTitle>
+        <CardDescription>Faça login para entrar.</CardDescription>
       </CardHeader>
-      <Form {...formRegister}>
+      <Form {...formlogin}>
         <form
-          onSubmit={formRegister.handleSubmit(onSubmitRegister)}
+          onSubmit={formlogin.handleSubmit(onSubmitlogin)}
           className="space-y-4"
         >
           <CardContent className="space-y-4">
             <FormField
-              control={formRegister.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome Completo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Informe o nome completo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={formRegister.control}
+              control={formlogin.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -98,7 +74,7 @@ const SignUpForm = () => {
               )}
             />
             <FormField
-              control={formRegister.control}
+              control={formlogin.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -110,23 +86,11 @@ const SignUpForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={formRegister.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirmar Senha</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Confirmar a senha" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">
-              Criar Conta
+              Entrar
             </Button>
           </CardFooter>
         </form>
@@ -135,4 +99,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default LoginForm;
