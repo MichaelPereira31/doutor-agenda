@@ -1,11 +1,11 @@
 "use client"
-import { CalendarDays, LayoutDashboard, Stethoscope, UsersRound } from "lucide-react"
+import { CalendarDays, LayoutDashboard, LogOut, Stethoscope, UsersRound } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -54,6 +54,7 @@ const items = [
 
 export function AppSidebar() {
   const router = useRouter();
+  const session = authClient.useSession();
   
   return (
     <Sidebar>
@@ -83,10 +84,24 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton size="lg">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm">
+                      {session.data?.user.clinic?.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {session.data?.user.email}
+                    </p>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Button variant="destructive" onClick={() =>
+                <DropdownMenuItem onClick={() =>
                           authClient.signOut({
                             fetchOptions: {
                               onSuccess: () => {
@@ -95,8 +110,7 @@ export function AppSidebar() {
                             },
                           })
                         }>
-                    Sair
-                  </Button>
+                    <LogOut/> Sair
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
               </DropdownMenuContent>
